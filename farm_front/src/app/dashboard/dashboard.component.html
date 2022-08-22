@@ -1,0 +1,8 @@
+<p routerLink="farm">Cadastrar</p>
+<mat-list>
+  <a routerLink="/details/{{farm.id}}" *ngFor="let farm of farms">
+    <mat-list-item>
+      {{farm.name}}
+    </mat-list-item>
+  </a>
+</mat-list>

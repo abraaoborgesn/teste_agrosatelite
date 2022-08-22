@@ -1,0 +1,14 @@
+<button routerLink="/">Voltar</button>
+<p>{{farm?.name}}</p>
+<p>{{farm?.centroid}}</p>
+<p>{{farm?.owner_id}}</p>
+
+<ng-container matColumnDef="action">
+  <button mat-icon-button color="warn">
+    <mat-icon (click)="deleteFarm()">delete</mat-icon>
+  </button>
+  <button mat-icon-button color="primary">
+    <mat-icon routerLink="/edit/{{farm?.id}}">editar</mat-icon>
+  </button>
+</ng-container>
+

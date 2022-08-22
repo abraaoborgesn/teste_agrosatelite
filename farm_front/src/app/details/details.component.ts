@@ -17,16 +17,15 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.params['id'];
-    console.log(id)
     this.farmService.read(id).subscribe({
       next: (res) => {
         this.farm = res
-      }
-    })
-
-    this.farmService.getOwner(id).subscribe({
-      next: (res) => {
-        this.ownerFarmName = res.name
+        const owner_id = Number(res.owner_id)
+        this.farmService.getOwner(owner_id).subscribe({
+          next: (res) => {
+            this.ownerFarmName = res.name
+          }
+        })
       }
     })
   }

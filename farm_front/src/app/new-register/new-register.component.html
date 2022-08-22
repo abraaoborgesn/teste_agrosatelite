@@ -1,7 +1,5 @@
 <div class="container">
- 
   <form [formGroup]="registerForm" (submit)="handleCreate()" class="form">
-
     <span>Preencha os dados da nova fazenda</span>
 
     <mat-form-field appearance="outline">
@@ -14,26 +12,26 @@
       />
     </mat-form-field>
 
+    <mat-form-field appearance="outline">
+      <input
+        matInput
+        placeholder="Dono da fazenda"
+        formControlName="owner_id"
+        name="owner"
+        [(ngModel)]="ownerFarmName"
+      />
+    </mat-form-field>
+   
+    <button class="newOwner" mat-button routerLink="/create-owner">Cadastrar novo dono de fazenda</button>
     
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          placeholder="Dono da fazenda"
-          formControlName="owner_id"
-          name="owner"
-          [(ngModel)]="registerForm.value.owner_id"
-        />
-      </mat-form-field>
-    
-
-      <p (click)="draw('Circle')" style="cursor: pointer">
-        Pegar coordenadas (Centróide e Geometria)
-      </p>      
+    <p (click)="draw('Circle')" style="cursor: pointer">
+      Pegar coordenadas (Centróide e Geometria)
+    </p>
 
     <div class="actions">
       <button routerLink="/" class="cancel">Cancelar</button>
 
-      <button mat-button *ngIf="!updateMode" [disabled]="registerForm.invalid" class="confirm">
+      <button mat-button *ngIf="!updateMode" [disabled]="registerForm.invalid" class="confirm" type="submit">
         Confirmar
       </button>
       <button mat-button *ngIf="updateMode" (click)="handleEdit()" class="confirm">Save</button>

@@ -16,16 +16,11 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.farmService.list().subscribe({
       next: (res) => {
-        // console.log(res);
         this.farms = res
       },
       error: (err) => {
         console.log(err)
       },
     })
-  }
-
-  teste(): void {
-    console.log(this.farms)
   }
 }

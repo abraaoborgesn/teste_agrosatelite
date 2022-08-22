@@ -9,6 +9,7 @@ import GeoJSON from 'ol/format/GeoJSON'
 
 import { BasemapComponent } from '../basemap/basemap.component'
 import { MapService } from '../map.service'
+import { Owner } from '../models/Owner'
 import { FarmService } from '../services/farm.service'
 
 @Component({
@@ -21,6 +22,8 @@ export class NewRegisterComponent implements OnInit {
   private _map!: BasemapComponent
   private _geometries: GeoJsonFeature[] = []
   updateMode: boolean = false
+  ownerFarmName!: string
+  owners!: Owner[]
 
   constructor(
     private farmService: FarmService,
@@ -33,7 +36,6 @@ export class NewRegisterComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       area: [],
-      // centroid: this.formBuilder.array([]),
       centroid: [],
       geometry: [],
       owner_id: ['', [Validators.required]],
@@ -47,8 +49,6 @@ export class NewRegisterComponent implements OnInit {
       this.updateMode = true
       this.farmService.read(id).subscribe({
         next: (res) => {
-          console.log(res)
-
           this.registerForm.setValue({
             name: res.name,
             area: res.area,
@@ -56,22 +56,35 @@ export class NewRegisterComponent implements OnInit {
             owner_id: res.owner_id,
             centroid: res.centroid,
           })
+
+          const owner_id = Number(res.owner_id)
+          this.farmService.getOwner(owner_id).subscribe({
+            next: (res) => {
+              this.ownerFarmName = res.name
+            },
+          })
         },
         error: (err) => {
           console.log(err)
         },
       })
     }
-
-    setTimeout(() => {
-      console.log(this.registerForm.value)
-    }, 2000)
   }
 
   handleEdit() {
-    const id = this.activatedRoute.snapshot.params['id']
-    this.farmService.editFarm(id, this.registerForm.value).subscribe()
-    this.router.navigate(['/'])
+    this.farmService.listOwners().subscribe({
+      next: (res) => {
+        res.map((owner: any) => {
+          if (owner.name === this.registerForm.value.owner_id) {
+            this.registerForm.value.owner_id = owner.id
+            // Edit
+            const id = this.activatedRoute.snapshot.params['id']
+            this.farmService.editFarm(id, this.registerForm.value).subscribe()
+            this.router.navigate(['/'])
+          }
+        })
+      },
+    })
   }
 
   handleCreate() {
@@ -79,10 +92,20 @@ export class NewRegisterComponent implements OnInit {
       this.toastr.error('Por favor, selecione a área')
       return
     }
-    if (this.registerForm.valid) {
-      this.farmService.create(this.registerForm.value).subscribe()
-      this.router.navigate(['/'])
-    }
+
+    this.farmService.listOwners().subscribe({
+      next: (res) => {
+        res.map((owner: any) => {
+          if (owner.name === this.registerForm.value.owner_id) {
+            this.registerForm.value.owner_id = owner.id
+            if (this.registerForm.valid) {
+              this.farmService.create(this.registerForm.value).subscribe()
+              this.router.navigate(['/'])
+            }
+          }
+        })
+      },
+    })
   }
 
   draw(type: 'Circle') {
@@ -92,10 +115,10 @@ export class NewRegisterComponent implements OnInit {
         identifier: 'geometry_map',
         drawType: type,
         callback: (geometry, center, area) => {
-          this.registerForm.value.centroid = center;
-          this.registerForm.value.area = area;
-          const geo = new GeoJSON().writeGeometryObject(geometry) as any;
-          this.handleNewGeometry(geo);
+          this.registerForm.value.centroid = center
+          this.registerForm.value.area = area
+          const geo = new GeoJSON().writeGeometryObject(geometry) as any
+          this.handleNewGeometry(geo)
         },
       })
     )
@@ -118,7 +141,7 @@ export class NewRegisterComponent implements OnInit {
       })
     )
     this._map.fitToAddons(this._map.listByPrefix('geometry'))
-    console.log('New geometry', geometry)
+    // console.log('New geometry', geometry)
     this.registerForm.value.geometry = geometry
     this._geometries.push(geometry)
   }

@@ -19,19 +19,15 @@ form {
     justify-content: center;
     width: 97%;
     height: 60px;
-    // line-height: 40px;
     padding: 10px 5px;
-    // margin: 20px;
     background-color: #1f8cb7;
-    // color: #fff;
     border-radius: 5px;
-    // text-decoration: none;
     text-align: center;
     font-weight: bold;
     font-size: 1rem;
 
-    transition: background-color .2s;
-  
+    transition: background-color 0.2s;
+
     &:hover {
       background-color: #1a7294;
     }
@@ -41,5 +37,22 @@ form {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
+  }
+
+  .newOwner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 97%;
+    height: 60px;
+    border-radius: 5px;
+    font-weight: 700;
+    background-color: #b0d2dc;
+
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgb(119, 187, 214);
+    }
   }
 }

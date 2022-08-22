@@ -69,7 +69,6 @@ export class DrawAddon extends MapAddon {
         const center = geom.getCenter()
         const circle = circularPolygon(center, radius)
         const area = circle.getArea()
-        // console.log('area aqui', area)
 
         this.input.callback(circle, center, area)
       } else {
@@ -86,7 +85,6 @@ export class DrawAddon extends MapAddon {
         if (geom instanceof Polygon) {
           const polygon = geom
           const area = polygon.getArea()
-          console.log('areaaaa', area)
           this.$tooltip.innerHTML = formatArea(area)
           sketch.setStyle(this.style_default)
         }

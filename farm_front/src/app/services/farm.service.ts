@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { Farm } from './../models/Farm'
 import { map, first } from 'rxjs/operators';
+import { Owner } from '../models/Owner';
 
 
 @Injectable({
@@ -11,6 +12,7 @@ import { map, first } from 'rxjs/operators';
 export class FarmService {
   constructor(private http: HttpClient) {}
 
+  
   create(farm: Farm) {
     return this.http.post<Farm>('http://localhost:3000/farms', farm);
   }
@@ -32,7 +34,16 @@ export class FarmService {
     return this.http.put<any>(`http://localhost:3000/farms/${id}`, farm)
   }
 
-  getOwner(id: number) {
+  // Owners
+  getOwner(id: number): Observable<any> {
     return this.http.get<any>(`http://localhost:3000/owners/${id}`)
+  }
+
+  listOwners(): Observable<any> {
+    return this.http.get<any>('http://localhost:3000/owners')
+  }
+
+  createOwner(owner: Owner): Observable<any> {
+    return this.http.post<Owner>('http://localhost:3000/owners', owner)
   }
 }

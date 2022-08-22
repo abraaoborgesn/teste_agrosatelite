@@ -17,11 +17,12 @@ import { AppComponent } from './app.component'
 import { BasemapComponent } from './basemap/basemap.component'
 import { DashboardComponent } from './dashboard/dashboard.component'
 import { DetailsComponent } from './details/details.component'
-import { FarmComponent } from './farm/farm.component'
 import { NewRegisterComponent } from './new-register/new-register.component'
+import { MatSelectModule } from '@angular/material/select';
+import { CreateOwnerComponent } from './create-owner/create-owner.component';
 
 @NgModule({
-  declarations: [AppComponent, BasemapComponent, FarmComponent, DashboardComponent, DetailsComponent, NewRegisterComponent],
+  declarations: [AppComponent, BasemapComponent, DashboardComponent, DetailsComponent, NewRegisterComponent, CreateOwnerComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -37,6 +38,7 @@ import { NewRegisterComponent } from './new-register/new-register.component'
     MatInputModule,
     MatListModule,
     ToastrModule.forRoot(),
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent],

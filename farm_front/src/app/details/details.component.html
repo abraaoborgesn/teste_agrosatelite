@@ -14,7 +14,7 @@
   </mat-list>
 
   <div class="actions">
-    <button mat-button class="cancel">delete</button>
-    <button mat-button class="confirm">editar</button>
+    <button mat-button class="cancel" (click)="deleteFarm()">delete</button>
+    <button mat-button class="confirm" routerLink="/edit/{{ farm?.id }}">editar</button>
   </div>
 </div>

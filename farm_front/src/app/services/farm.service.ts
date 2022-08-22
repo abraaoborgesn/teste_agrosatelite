@@ -31,4 +31,8 @@ export class FarmService {
   editFarm(id: number, farm: Farm): Observable<any> {
     return this.http.put<any>(`http://localhost:3000/farms/${id}`, farm)
   }
+
+  getOwner(id: number) {
+    return this.http.get<any>(`http://localhost:3000/owners/${id}`)
+  }
 }

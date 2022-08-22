@@ -11,6 +11,7 @@ import { FarmService } from '../services/farm.service';
 })
 export class DetailsComponent implements OnInit {
   farm!: Farm;
+  ownerFarmName!: string;
 
   constructor(private farmService: FarmService, private activatedRoute: ActivatedRoute, private toastr: ToastrService, private router: Router) { }
 
@@ -20,6 +21,12 @@ export class DetailsComponent implements OnInit {
     this.farmService.read(id).subscribe({
       next: (res) => {
         this.farm = res
+      }
+    })
+
+    this.farmService.getOwner(id).subscribe({
+      next: (res) => {
+        this.ownerFarmName = res.name
       }
     })
   }

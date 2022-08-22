@@ -8,18 +8,15 @@
     <input matInput placeholder="Nome da fazenda" formControlName="name" [(ngModel)]="registerForm.value.name">        
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <!-- <mat-label>Área</mat-label> -->
-    <input matInput placeholder="Placeholder" formControlName="area" name="area" type="text" [(ngModel)]="registerForm.value.area">
-  </mat-form-field>
+  
   
   <mat-form-field appearance="outline">
     <!-- <mat-label>Dono</mat-label> -->
-    <input matInput placeholder="Placeholder" formControlName="owner_id" [(ngModel)]="registerForm.value.owner_id">
+    <input matInput placeholder="Dono da fazenda" formControlName="owner_id" [(ngModel)]="registerForm.value.owner_id">
   </mat-form-field>
 
   <p (click)="draw('Circle')" style="cursor: pointer;">Pegar coordenadas (Centróide e Geometria)</p>
 
   <button *ngIf="!updateMode" [disabled]="registerForm.invalid">Confirmar</button>
-  <button *ngIf="updateMode" (click)="editTest()">Save</button>
+  <button *ngIf="updateMode" (click)="handleEdit()">Save</button>
 </form>

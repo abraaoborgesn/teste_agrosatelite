@@ -1,6 +1,7 @@
 import { dashedInteractionStyle, formatArea } from '@common/geolib'
 import { circular as circularPolygon } from 'node_modules/ol/geom/Polygon.js'
-import * as olSphere from 'ol/sphere';
+// import { getArea } from 'ol/geom/Polygon'
+import * as olSphere from 'ol/sphere'
 import GeometryType from 'ol/geom'
 import Geometry from 'ol/geom/Geometry'
 import Polygon from 'ol/geom/Polygon'
@@ -32,7 +33,7 @@ export class DrawAddon extends MapAddon {
     private input: {
       identifier: string
       drawType: GeometryType
-      callback: (geometry: Geometry, center: any) => any
+      callback: (geometry: Geometry, center: any, area: any) => any
       styleFunction?: ol.StyleFunction
       geometries?: any[]
       area?: any
@@ -67,23 +68,20 @@ export class DrawAddon extends MapAddon {
         geom.transform('EPSG:3857', 'EPSG:4326')
         const center = geom.getCenter()
         const circle = circularPolygon(center, radius)
-        
-        // const area2 = olSphere.default.getArea(geom)
-        // console.log(area2)
-//pegar area, teste
-        // const area2 = geom.getArea()
-        // console.log('areaaasad', area2)
-        this.input.callback(circle, center)
+        const area = circle.getArea()
+        // console.log('area aqui', area)
+
+        this.input.callback(circle, center, area)
       } else {
         geom.transform('EPSG:3857', 'EPSG:4326')
-        this.input.callback(geom, '')
+        this.input.callback(geom, '', '')
       }
     }
     this.interaction.on('drawend', this.event)
 
     this.interaction.on('drawstart', (evt: any) => {
       const sketch = evt.feature
-      sketch.getGeometry().on('change', (evt) => {
+      sketch.getGeometry().on('change', (evt: any) => {
         const geom = evt.target
         if (geom instanceof Polygon) {
           const polygon = geom

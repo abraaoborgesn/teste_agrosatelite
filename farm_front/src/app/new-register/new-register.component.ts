@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DrawAddon } from '@common/draw';
-import { GeoJsonFeatureAddon } from '@common/feature';
-import { GeoJsonFeature, pointClickStyle } from '@common/geolib';
-import { ToastrService } from 'ngx-toastr';
-import GeoJSON from 'ol/format/GeoJSON';
+import { Component, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router'
+import { DrawAddon } from '@common/draw'
+import { GeoJsonFeatureAddon } from '@common/feature'
+import { GeoJsonFeature, pointClickStyle } from '@common/geolib'
+import { ToastrService } from 'ngx-toastr'
+import GeoJSON from 'ol/format/GeoJSON'
 
-import { BasemapComponent } from '../basemap/basemap.component';
-import { MapService } from '../map.service';
-import { FarmService } from '../services/farm.service';
+import { BasemapComponent } from '../basemap/basemap.component'
+import { MapService } from '../map.service'
+import { FarmService } from '../services/farm.service'
 
 @Component({
   selector: 'app-new-register',
@@ -17,10 +17,10 @@ import { FarmService } from '../services/farm.service';
   styleUrls: ['./new-register.component.scss'],
 })
 export class NewRegisterComponent implements OnInit {
-  registerForm!: FormGroup;
-  private _map!: BasemapComponent;
-  private _geometries: GeoJsonFeature[] = [];
-  updateMode: boolean = false;
+  registerForm!: FormGroup
+  private _map!: BasemapComponent
+  private _geometries: GeoJsonFeature[] = []
+  updateMode: boolean = false
 
   constructor(
     private farmService: FarmService,
@@ -29,38 +29,37 @@ export class NewRegisterComponent implements OnInit {
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
     private router: Router
-  ) {  
+  ) {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      area: ['', [Validators.required]],
+      area: [],
       // centroid: this.formBuilder.array([]),
       centroid: [],
       geometry: [],
       owner_id: ['', [Validators.required]],
-    })    
+    })
   }
 
   ngOnInit(): void {
-    this._map = this._mapService.map;
-    const id = this.activatedRoute.snapshot.params['id'];
+    this._map = this._mapService.map
+    const id = this.activatedRoute.snapshot.params['id']
     if (id) {
       this.updateMode = true
       this.farmService.read(id).subscribe({
         next: (res) => {
-          console.log(res)        
-          
-            this.registerForm.setValue({
-              name: res.name,
-              area: res.area,
-              geometry: res.geometry,
-              owner_id: res.owner_id,
-              centroid: res.centroid
-            });
-          
+          console.log(res)
+
+          this.registerForm.setValue({
+            name: res.name,
+            area: res.area,
+            geometry: res.geometry,
+            owner_id: res.owner_id,
+            centroid: res.centroid,
+          })
         },
         error: (err) => {
-          console.log(err);
-        }
+          console.log(err)
+        },
       })
     }
 
@@ -69,24 +68,21 @@ export class NewRegisterComponent implements OnInit {
     }, 2000)
   }
 
-  editTest() {
-    const id = this.activatedRoute.snapshot.params['id'];
-    this.farmService.editFarm(id, this.registerForm.value).subscribe();
-    this.router.navigate(['/']);
+  handleEdit() {
+    const id = this.activatedRoute.snapshot.params['id']
+    this.farmService.editFarm(id, this.registerForm.value).subscribe()
+    this.router.navigate(['/'])
   }
 
   handleCreate() {
-    if (
-      this.registerForm.value.geometry === null &&
-      this.registerForm.value.centroid === null
-    ) {
-      this.toastr.error('Por favor, selecione a área');
+    if (this.registerForm.value.geometry === null && this.registerForm.value.centroid === null) {
+      this.toastr.error('Por favor, selecione a área')
       return
     }
     if (this.registerForm.valid) {
-      this.farmService.create(this.registerForm.value).subscribe();
-      this.router.navigate(['/']);
-    } 
+      this.farmService.create(this.registerForm.value).subscribe()
+      this.router.navigate(['/'])
+    }
   }
 
   draw(type: 'Circle') {
@@ -95,10 +91,11 @@ export class NewRegisterComponent implements OnInit {
       new DrawAddon({
         identifier: 'geometry_map',
         drawType: type,
-        callback: (geometry, center) => {
-          this.registerForm.value.centroid = center
-          const geo = new GeoJSON().writeGeometryObject(geometry) as any
-          this.handleNewGeometry(geo)
+        callback: (geometry, center, area) => {
+          this.registerForm.value.centroid = center;
+          this.registerForm.value.area = area;
+          const geo = new GeoJSON().writeGeometryObject(geometry) as any;
+          this.handleNewGeometry(geo);
         },
       })
     )
@@ -121,7 +118,7 @@ export class NewRegisterComponent implements OnInit {
       })
     )
     this._map.fitToAddons(this._map.listByPrefix('geometry'))
-    // console.log('New geometry', geometry)
+    console.log('New geometry', geometry)
     this.registerForm.value.geometry = geometry
     this._geometries.push(geometry)
   }
